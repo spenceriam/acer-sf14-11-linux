@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Key capture - Acer SF14-11 Fn row</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:720px;margin:2rem auto;padding:0 1rem}
+table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.4rem .6rem;text-align:left}
+#last{font-size:1.4rem;font-weight:700;margin:1rem 0}
+button{padding:.5rem 1rem;margin:.5rem .5rem .5rem 0}
+.hint{color:#555}
+</style>
+</head>
+<body>
+<h1>Key capture</h1>
+<p class="hint">Click <b>Start</b>, then press each key once, ~1s apart: <b>F1, Fn+F1, F2, Fn+F2, F3, Fn+F3, F4, Fn+F4, F5, Fn+F5, F6, Fn+F6, Esc</b>.
+Printed icons (manual/keycaps: F1 mute, F4 mic-mute, F5/F6 brightness) tell the <i>function</i> - this page records the <i>event codes</i> needed for the remap. Media keys may be swallowed by the desktop before reaching the browser; rows missing here still need the <code>evtest</code> line.</p>
+<button id="start">Start</button>
+<button id="clear">Clear</button>
+<button id="copy">Copy TSV</button>
+<div id="last">Press Start, then a key…</div>
+<table><thead><tr><th>#</th><th>code</th><th>key</th><th>keyCode</th><th>location</th></tr></thead><tbody id="rows"></tbody></table>
+<script>
+let n=0,listening=false;
+const last=document.getElementById('last'),rows=document.getElementById('rows');
+document.getElementById('start').onclick=()=>{listening=true;last.textContent='Listening… press a key';};
+document.getElementById('clear').onclick=()=>{n=0;rows.innerHTML='';};
+document.getElementById('copy').onclick=()=>{
+ let t='n\tcode\tkey\tkeyCode\tlocation\n';
+ document.querySelectorAll('#rows tr').forEach(tr=>{t+=tr.innerText.replaceAll('\t',' ')+'\n';});
+ navigator.clipboard.writeText(t).then(()=>last.textContent='Copied - paste it back here');
+};
+addEventListener('keydown',e=>{
+ if(!listening)return;
+ e.preventDefault();
+ n++;
+ const tr=document.createElement('tr');
+ tr.innerHTML=`<td>${n}</td><td>${e.code}</td><td>${e.key}</td><td>${e.keyCode}</td><td>${e.location}</td>`;
+ rows.appendChild(tr);
+ last.textContent=`${e.code}  key=${e.key}`;
+});
+</script>
+</body>
+</html>
