@@ -1,8 +1,7 @@
 # acer-sf14-11-linux
 
 Provisioning for **Acer Swift 14 AI SF14-11T** (`Bluetang_SX1`, Snapdragon X Plus
-X1P64100) on Ubuntu 26.04 (`7.0.0-30-generic`). Tested on this machine; aimed to
-also work on Debian flavors (see caveats).
+X1P64100) on Ubuntu 26.04 (`7.0.0-30-generic`). Tested on this machine.
 
 ## What was wrong out of the box
 
@@ -48,15 +47,3 @@ Audio topology (same-HW T14s reuse):
    `wpctl set-default <Speaker>`.
 5. Verify: `cat /proc/device-tree/model`, 10 CPUs online,
    `upower` ~100% charging, `ls /sys/class/typec`, `aplay -l`.
-
-## Debian-flavor caveats
-
-Mostly yes: same GRUB `10_linux` DTB mechanism, same `/lib/firmware`
-layout, same UCM paths. Differences: Debian kernels may lack the
-`x1p64100-acer-swift-sf14-11.dtb` (check
-`/usr/lib/firmware/*/device-tree/qcom/`), firmware metapackages are named
-differently (`firmware-qcom-*` vs `linux-firmware-qualcomm-*`), no
-`hwe-qcom-x1e-meta`/`ubuntu-x1e-settings` (recreate cmdline
-`clk_ignore_unused pd_ignore_unused cma=128M efi=noruntime` manually), and
-`qcom-firmware-extract` availability varies. Re-test `adsp: running` and
-`aplay -l` per distro release.
